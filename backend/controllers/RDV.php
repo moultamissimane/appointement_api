@@ -35,28 +35,20 @@ class RDV extends Controller
     public function add()
     {
         $headers = apache_request_headers();
-        
+
         $headers = isset($headers['Authorization']) ? explode(' ', $headers['Authorization']) : null;
         if ($headers) {
             try {
                 $infos = $this->verifyAuth($headers[1]);
-                if ($infos->role === "USER") {
-                    
-                    $reference = $infos->reference;
-                    
-                    $RDV = $this->RDVModel->add($this->data, $reference);
-                    
-                    if ($RDV) {
-                        print_r(json_encode(array(
-                            "message" => "RDV Created with success",
-                            "data" => $this->data
-                        )));
-                    }
-                } else {
+                $reference = $infos->reference;
+
+                $RDV = $this->RDVModel->add($this->data, $reference);
+
+                if ($RDV) {
                     print_r(json_encode(array(
-                        'error' => "You Don't Have permission to make this action",
+                        "message" => "RDV Created with success",
+                        "data" => $this->data
                     )));
-                    die();
                 }
             } catch (\Throwable $th) {
                 print_r(json_encode(array(
@@ -65,7 +57,7 @@ class RDV extends Controller
             }
         } else {
             print_r(json_encode(array(
-                'error' => "Token is invalid",'token'=> $headers
+                'error' => "Token is invalid", 'token' => $headers
             )));
         }
     }
@@ -114,9 +106,9 @@ class RDV extends Controller
     }
 
 
-    public function search(){
+    public function search()
+    {
         $result = $this->userModel->getBySearch($this->data);
         print_r(json_encode($result));
     }
-
 }

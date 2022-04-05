@@ -10,7 +10,7 @@ class RDVModel
 
     public function getRDVs($date)
     {
-        $this->db->query("SELECT * FROM  slots  where date = :date ORDER BY slot ASC ");
+        $this->db->query("SELECT * FROM  reservation  where reserv_date = :date ORDER BY reserv_id ASC ");
         $this->db->bind(':date', $date);
         return $this->db->all();
     }
@@ -43,16 +43,16 @@ class RDVModel
     {
         try {
             $this->db->query("INSERT INTO
-                slots
+                reservation
             SET
-                date = :date,
+                reserv_date = :reserv_date,
                 slot = :slot,
-                refenrence_id = :reference
+                reference = :reference
             ");
             
-            $this->db->bind(':date', $data->date);
+            $this->db->bind(':reserv_date', $data->reserv_date);
             $this->db->bind(':slot', $data->slot);
-            $this->db->bind(':reference', $data->reference);
+            $this->db->bind(':reference', $reference);
             $this->db->single();
         } catch (\PDOExeption $err) {
             return $err->getMessage();
